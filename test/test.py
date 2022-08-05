@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 import cv2
-from PIL import Image,ImageFont,ImageDraw
+from PIL import Image, ImageFont, ImageDraw
 
 
 base_img = "base_img.png"
@@ -11,16 +11,19 @@ black_font = (20, 20, 20)
 blue_font = (20, 20, 255)
 red_font = (255, 20, 20)
 
+
 class Create_Img():
-    def __init__(self):
-        self.country = "雲林縣" #
-        self.target = "北港朝天宮" #
-        self.contact_person = "陳泓嶧" 
-        self.temp = "30.5" #
-        self.hum = "42.3" #
-        self.wind_speed = "50" #
-        self.amc = "43.1" #
-        self.target_img = "image.jpg"
+    def __init__(self, time, interface, tempo_name):
+        self.interface = interface
+        self.time = time
+        self.country = "雲林縣"  #
+        self.target = tempo_name  #
+        self.contact_person = "陳泓嶧"
+        self.temp = "30.5"  #
+        self.hum = "42.3"  #
+        self.wind_speed = "50"  #
+        self.amc = "43.1"  #
+        self.target_img = tempo_name + '.jpg'
         self.output_img = "output.png"
         self.warn_title = "彩繪即將乾縮損毀"
         self.content = "Test"
@@ -28,18 +31,18 @@ class Create_Img():
 
     def get_info(self):
         result = {
-            "country":self.country,
-            "target":self.target,
-            "contact_person":self.contact_person,
-            "temp":self.temp,
-            "hum":self.hum,
-            "wind_speed":self.wind_speed,
-            "amc":self.amc,
-            "target_img":self.target_img,
-            "output_img":self.output_img,
-            "warn_message":self.warn_title,
-            "content":self.content,
-            "warn_area":self.warn_area
+            "country": self.country,
+            "target": self.target,
+            "contact_person": self.contact_person,
+            "temp": self.temp,
+            "hum": self.hum,
+            "wind_speed": self.wind_speed,
+            "amc": self.amc,
+            "target_img": self.target_img,
+            "output_img": self.output_img,
+            "warn_message": self.warn_title,
+            "content": self.content,
+            "warn_area": self.warn_area
         }
         return result
 
@@ -49,14 +52,13 @@ class Create_Img():
         img_left = 30
         image = cv2.imread(base_img)
         target = cv2.imread(data['target_img'])
-        target = cv2.resize(target, (810,330))
+        target = cv2.resize(target, (810, 330))
         target_l, target_w, target_h = target.shape
         img_bottom = img_top + target_l
-        img_right = img_left + target_w 
-
+        img_right = img_left + target_w
         image[img_top:img_bottom, img_left:img_right] = target
         cv2.imwrite(data['output_img'], image)
-        
+
     def write_text_on_image(self, content, position, font_size, font_color):
         data = self.get_info()
         image = Image.open(data['output_img']).convert("RGBA")
@@ -67,29 +69,93 @@ class Create_Img():
         text_combined = Image.alpha_composite(image, text_conf)
         text_combined.save(data['output_img'])
 
-    def draw_icon_on_img(self):
-        data = self.get_info()
-        logo = cv2.imread(warning_icon)
-        image = cv2.imread(data['output_img'])
-        logo_size_map ={
-            "frame":(210, 30),
-            "W3":(50, 50),
-            "W2":(35, 35),
-            "W1":(20, 20)}
-        
+    # def draw_icon_on_img(self):
+    #     data = self.get_info()
+    #     logo = cv2.imread(warning_icon)
+    #     image = cv2.imread(data['output_img'])
+
+    #     logo_size_map = {
+    #         "frame": (210, 30),
+    #         "W3": (50, 50),
+    #         "W2": (35, 35),
+    #         "W1": (20, 20)}
+    def draw_watermark_on_the_base_img(img_name, logo_name, position, logo_size):
+    # 讀取原圖與 Logo
+        logo = cv2.imread(logo_name)
+        image = cv2.imread(img_name)
+        # 設定 Logo 大小
+        if logo_size == "frame":
+            logo_size = (210, 30)
+        elif logo_size == "W3":
+            logo_size = (50,50)
+        elif logo_size == "W2":
+            logo_size = (35, 35)
+        elif logo_size == "W1":
+            logo_size = (20, 20)
+        # 調整 Logo 的形狀
+        logo = cv2.resize(logo, logo_size)
+        # 將 Logo 形狀存成三個變數
+        h_logo, w_logo, d_logo = logo.shape
+        # 設定 Logo 對應位置
+        if position == "frame":
+            position = (85, 305)
+        else:
+            if position[1] == "1":
+                p0 = 190
+            elif position[1] == "2":
+                p0 = 250
+            elif position[1] == "4":
+                p0 = 210
+            elif position[1] == "5":
+                p0 = 260
+            elif position[1] == "7":
+                p0 = 230
+            elif position[1] == "8":
+                p0 = 270
+            elif position[1] in ["3", "6", "9"]:
+                p0 = 310
+            if position[0] == "L" and int(position[1]) <= 3:
+                p1 = 120
+            elif position[0] == "L" and int(position[1]) <= 6:
+                p1 = 180
+            elif position[0] == "L" and int(position[1]) <= 9:
+                p1 = 240
+            elif position[0] == "M":
+                p1 = 400
+            elif position[0] == "R" and int(position[1]) <= 3:
+                p1 = 680
+            elif position[0] == "R" and int(position[1]) <= 6:
+                p1 = 620
+            elif position[0] == "R" and int(position[1]) <= 9:
+                p1 = 560
+            position = (p0, p1)
+        # 設定 Logo 在原圖上的座標
+        top_ = position[0]
+        left_ = position[1]
+        bottom_ = top_ + h_logo
+        right_ = left_ + w_logo
+        # 劃定原圖與 Logo 相對應的座標
+        destination = image[top_:bottom_, left_:right_]
+        # 轉成浮水印
+        result = cv2.addWeighted(destination, 1, logo, 1, 0)
+        # 用 Logo 覆蓋原圖
+        image[top_:bottom_, left_:right_] = result
+        # 儲存圖片
+        cv2.imwrite("output.png", image)
+
     def draw_result_img(self):
         self.create_result_img()
-        self.write_text_on_image(inside_of_frame, (340,87), 23, black_font)
-        self.write_text_on_image(self.target, (75, 17), 23, black_font)
-        self.write_text_on_image(self.country, (360, 20), 13, black_font)
-        self.write_text_on_image(self.contact_person, (400, 40), 13, black_font)
+        self.write_text_on_image(inside_of_frame, (340, 87), 23, black_font)
+        self.write_text_on_image(self.target, (75, 27), 23, black_font)
+        self.write_text_on_image(self.country, (360, 25), 13, black_font)
+        self.write_text_on_image(self.contact_person, (400, 43), 13, black_font)
         self.write_text_on_image(self.temp, (925, 60), 15, blue_font)
         self.write_text_on_image(self.hum, (1045, 60), 15, blue_font)
         self.write_text_on_image(self.wind_speed, (925, 100), 15, blue_font)
         self.write_text_on_image(self.amc, (970, 137), 15, blue_font)
         self.write_text_on_image(self.warn_title, (880, 218), 15, red_font)
         self.write_text_on_image(self.warn_area, (880, 240), 15, red_font)
-        self.write_text_on_image(self.content, (880, 260), 13, black_font), 
+        self.write_text_on_image(self.content, (880, 260), 13, black_font)
 
-test = Create_Img()
-test.draw_result_img()
+# test = Create_Img()
+# test.draw_result_img()
