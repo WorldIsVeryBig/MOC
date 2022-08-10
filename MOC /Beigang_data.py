@@ -9,8 +9,7 @@ def csv_data():
     # 將csv資料裡 LocalTime 欄位變成list
     time_data = df['LocalTime'].tolist()
     # 將 LocalTime 裡的資料傳入 Time 變數裡
-    for i in range(len(time_data)-1):
-        time.append(time_data[i]+" - "+time_data[i+1])
+    time = [time_data[i]+" - "+time_data[i+1] for i in range(len(time_data)-1)]
     # 包成 data 回傳
     data = {
         "Time": time
