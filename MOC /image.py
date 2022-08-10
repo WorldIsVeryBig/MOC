@@ -83,7 +83,7 @@ Z: 3315 ~ 4536 ]"""
         cv2.imwrite(data['output_img'], image)
 
     def write_text_on_image(self, content, position, font_size, font_color):
-        #取得傳入資料
+        # 取得傳入資料
         data = self.get_info()
         # 開啟目標圖片
         image = Image.open(data['output_img']).convert("RGBA")
@@ -175,7 +175,7 @@ Z: 3315 ~ 4536 ]"""
         # 繪製縣市名稱
         self.write_text_on_image(self.country, (360, 25), 13, black_font)
         # 繪製聯絡人名稱
-        self.write_text_on_image(self.contact_person, (400, 43), 13, black_font)  
+        self.write_text_on_image(self.contact_person, (400, 43), 13, black_font)
         # 繪製溫度
         self.write_text_on_image(self.temp, (925, 60), 15, blue_font)
         # 繪製濕度

@@ -65,7 +65,7 @@ root.geometry('1200x600')
 # 設置畫布
 canvas = tk.Canvas(root, width=1250, height=600)
 canvas.pack()
-#取得時間資料
+# 取得時間資料
 data = csv_data()
 
 # 設置時間下拉條
