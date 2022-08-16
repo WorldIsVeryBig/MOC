@@ -60,7 +60,7 @@ def get_info(event):
 
 # 設置主畫面
 root = tk.Tk()
-root.title('test window')
+root.title('User Window')
 root.geometry('1200x600')
 # 設置畫布
 canvas = tk.Canvas(root, width=1250, height=600)
