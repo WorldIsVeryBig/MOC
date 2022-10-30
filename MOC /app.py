@@ -6,6 +6,17 @@ from Beigang_data import *
 
 
 def get_info(event):
+    content_mapping = {
+        "A": "左上方",
+        "B": "中上方",
+        "C": "右上方",
+        "D": "左中方",
+        "E": "正中方",
+        "F": "右中方",
+        "G": "左下方",
+        "H": "中下方",
+        "I": "右下方"
+    }
     # 取得資料
     data = {
         "Time": time_combobox.get(),
@@ -19,38 +30,80 @@ def get_info(event):
     # 繪製目標圖
     result.draw_result_img()
 
+    alert_data = alert_point_data(tempo_name=data['Tempo_name'], time=time)
+    print({"alert_data": alert_data})
     # 繪製警告標誌
     if interface_combobox.get() == 'Interface 1':
-        Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, "L1", "W3")
-        # Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, "L2", "W3")
-        # Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, "L3", "W3")
-        # Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, "M1", "W3")
-        # Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, "M2", "W3")
-        # Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, "M3", "W3")
-        # Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, "R1", "W3")
-        # Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, "R2", "W3")
-        # Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, "R3", "W3")
+        content = list()
+        icon_mapping = {
+            "A": ("L1", "W3"), 
+            "D": ("L2", "W3"),
+            "G": ("L3", "W3"),
+            "B": ("M1", "W3"),
+            "E": ("M2", "W3"),
+            "H": ("M3", "W3"),
+            "C": ("R1", "W3"),
+            "F": ("R2", "W3"),
+            "I": ("R3", "W3")
+        }
+        for i in list(alert_data):
+            if i.split('_')[0] != 'interface1':
+                alert_data.pop(i)
+        for k, v in alert_data.items():
+            if float(v) > 11.5:
+                font_info = icon_mapping.get(k.split('_')[1])
+                Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, font_info[0], font_info[1])
+                content.append(content_mapping.get(k.split('_')[1]))
+        content = "區域：{area}".format(area = content)
+        result.write_text_on_image(content, (880, 240), 15, (255, 20, 20))
     elif interface_combobox.get() == 'Interface 2':
-        Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, "L4", "W2")
-        # Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, "L5", "W2")
-        # Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, "L6", "W2")
-        # Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, "M4", "W2")
-        # Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, "M5", "W2")
-        # Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, "M6", "W2")
-        # Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, "R4", "W2")
-        # Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, "R5", "W2")
-        # Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, "R6", "W2")
-    else:
-        Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, "L7", "W1")
-        # Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, "L8", "W1")
-        # Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, "L9", "W1")
-        # Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, "M7", "W1")
-        # Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, "M8", "W1")
-        # Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, "M9", "W1")
-        # Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, "R7", "W1")
-        # Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, "R8", "W1")
-        # Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, "R9", "W1")
+        content = list()
+        icon_mapping = {
+            "A": ("L4", "W2"), 
+            "D": ("L5", "W2"),
+            "G": ("L6", "W2"),
+            "B": ("M4", "W2"),
+            "E": ("M5", "W2"),
+            "H": ("M6", "W2"),
+            "C": ("R4", "W2"),
+            "F": ("R5", "W2"),
+            "I": ("R6", "W2")
+        }
+        for i in list(alert_data):
+            if i.split('_')[0] != 'interface2':
+                alert_data.pop(i)
 
+        for k, v in alert_data.items():
+            if float(v) > 11.5:
+                font_info = icon_mapping.get(k.split('_')[1])
+                Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, font_info[0], font_info[1])
+                content.append(content_mapping.get(k.split('_')[1]))
+        content = "區域：{area}".format(area = content)
+        result.write_text_on_image(content, (880, 240), 15, (255, 20, 20))
+    else:
+        content = list()
+        icon_mapping = {
+            "A": ("L7", "W1"), 
+            "D": ("L8", "W1"),
+            "G": ("L9", "W1"),
+            "B": ("M7", "W1"),
+            "E": ("M8", "W1"),
+            "H": ("M9", "W1"),
+            "C": ("R7", "W1"),
+            "F": ("R8", "W1"),
+            "I": ("R9", "W1")
+        }
+        for i in list(alert_data):
+            if i.split('_')[0] != 'interface3':
+                alert_data.pop(i)
+
+        for k, v in alert_data.items():
+            if float(v) > 11.5:
+                font_info = icon_mapping.get(k.split('_')[1])
+                Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, font_info[0], font_info[1])
+                content.append(content_mapping.get(k.split('_')[1]))
+        content = "區域：{area}".format(area = content)
+        result.write_text_on_image(content, (880, 240), 15, (255, 20, 20))
     # 設置預設圖片
     photo = tk.PhotoImage(file="output.png")
     imgLabel = tk.Label(root, image=photo)
@@ -69,7 +122,6 @@ canvas.pack()
 data = csv_data()
 
 # 設置時間下拉條
-# time_combobox_list = ['2018/05/26 13:30:00 - 2018/05/26 13:40:00']
 time_combobox_list = data['Time']
 time_combobox = ttk.Combobox(root, state='readonly', width=32)
 time_combobox.bind("<<ComboboxSelected>>", get_info)
@@ -86,7 +138,8 @@ interface_combobox.place(x=500, y=20)
 interface_combobox.current(0)
 
 # 設置宮殿名稱下拉條
-tempo_name_combobox_list = ['北港朝天宮 - 三川殿', '北港朝天宮 - 觀音殿', '北港朝天宮 - 主殿', '北港朝天宮 - 三宮殿', '北港朝天宮 - 文昌殿']
+tempo_name_combobox_list = ['北港朝天宮 - 三川殿', '北港朝天宮 - 觀音殿', '北港朝天宮 - 主殿', '北港朝天宮 - 三官殿',
+                            '北港朝天宮 - 文昌殿', '鹿港龍山寺 - 正殿', '鹿港龍山寺 - 後殿']
 tempo_name_combobox = ttk.Combobox(root, state='readonly')
 tempo_name_combobox.bind("<<ComboboxSelected>>", get_info)
 tempo_name_combobox['value'] = tempo_name_combobox_list

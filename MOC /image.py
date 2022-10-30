@@ -2,6 +2,8 @@
 import cv2
 from PIL import Image, ImageFont, ImageDraw
 import pandas as pd
+import math
+
 
 init_root = './data/init_photo/'
 base_img = init_root + "base_img.png"
@@ -16,16 +18,27 @@ red_font = (255, 20, 20)
 class Create_Img():
 
     def __init__(self, time, interface, tempo_name):
-        df = pd.read_csv("./data/no_index_test_LSTM_15_北港朝天宮綜合氣象站(2020).csv")
+        df1 = pd.read_csv("./data/朝天宮正殿Data/北港朝天宮正殿壽樑Data.csv")
+        df2 = pd.read_csv("./Total_Data/2022 data 北港朝天宮.csv")
         self.interface = interface
         self.time = time
         self.country = "雲林縣"  #
         self.target = tempo_name  #
         self.contact_person = "陳泓嶧"
-        self.temp = str(df.loc[df['LocalTime'] == time]['Temp']).split("   ")[1].split('\n')[0]
-        self.hum = str(df.loc[df['LocalTime'] == time]['Hum']).split("   ")[1].split('\n')[0]  #
-        self.wind_speed = str(df.loc[df['LocalTime'] == time]['WindSpeed']).split("   ")[1].split('\n')[0]  #
-        self.amc = "43.1"  #
+        self.temp = (str(df1.loc[df1['資料時間'] == time]['溫度(°C)']).split("   ")[1].split('\n')[0].strip())
+        self.hum = str(df1.loc[df1['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split('\n')[0]  #
+        self.wind_speed = str(df2.loc[df2['LocalTime'] == time]['WindSpeed']).split("   ")[1].split('\n')[0]  #
+        if self.temp == 'NaN':
+            Pw_Pa = 'Nan'
+        else:
+            Tk = float(self.temp) + 273.15
+            sida = 1 - (Tk / 647.096)
+            exp = (math.exp((647.096 * (-7.85951783 * sida + 1.84408259 * sida ** 1.5 - 11.7866497 * sida ** 3 + 22.6807411 * sida ** 3.5 - 
+                  15.9618719 * sida ** 4 + 1.80122502 * sida ** 7.5))/Tk))
+            Pws_hPa = 220640 * exp
+            Pw_Pa = (float(self.hum) / 100) * Pws_hPa * 100
+            Ah = str(round(float(2.169 * Pw_Pa / Tk), 2))
+        self.amc = Ah  #
         self.target_img = './data/Photo/' + tempo_name + '.jpg'
         self.output_img = "output.png"
         self.warn_title = "彩繪即將乾縮損毀"
@@ -89,7 +102,7 @@ Z: 3315 ~ 4536 ]"""
         # 新增 RGB 格式底圖
         text_conf = Image.new('RGBA', image.size)
         # 設定字型、文字大小與文字透明度
-        font = ImageFont.truetype("STHeiti Light.ttc", font_size)
+        font = ImageFont.truetype("Hiragino Sans GB.ttc", font_size, encoding='utf-8')
         # 用底圖新增 ImageDraw 物件
         draw = ImageDraw.Draw(text_conf)
         # 輸入文字
@@ -186,6 +199,6 @@ Z: 3315 ~ 4536 ]"""
         # 繪製警告標題
         self.write_text_on_image(self.warn_title, (880, 218), 15, red_font)
         # 繪製毀壞警告區域
-        self.write_text_on_image(self.warn_area, (880, 240), 15, red_font)
-        # 繪製內容
-        self.write_text_on_image(self.content, (880, 320), 16, red_font)
+        # self.write_text_on_image(self.warn_area, (880, 240), 15, red_font)
+        # # 繪製內容
+        # self.write_text_on_image(self.content, (880, 320), 16, red_font)
