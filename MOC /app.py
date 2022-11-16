@@ -11,7 +11,7 @@ def get_info(event):
         "B": "中上方",
         "C": "右上方",
         "D": "左中方",
-        "E": "正中方",
+        "E": "正中間",
         "F": "右中方",
         "G": "左下方",
         "H": "中下方",
@@ -27,6 +27,7 @@ def get_info(event):
     time = data['Time'].split(" - ")[1]
     # 傳入 class 所需變數
     result = Create_Img(time=time, interface=data['Interface'], tempo_name=data['Tempo_name'])
+    image_data = result.get_info()
     # 繪製目標圖
     result.draw_result_img()
 
@@ -34,7 +35,7 @@ def get_info(event):
     print({"alert_data": alert_data})
     # 繪製警告標誌
     if interface_combobox.get() == 'Interface 1':
-        content = list()
+        content = ['左下方'] if data.get('Tempo_name') == '北港朝天宮 - 主殿' and image_data['wind_speed'] != 0 else list()
         icon_mapping = {
             "A": ("L1", "W3"), 
             "D": ("L2", "W3"),
@@ -50,14 +51,18 @@ def get_info(event):
             if i.split('_')[0] != 'interface1':
                 alert_data.pop(i)
         for k, v in alert_data.items():
-            if float(v) > 11.5:
+            if float(v) < 11.5 or float(v) > 15:
                 font_info = icon_mapping.get(k.split('_')[1])
                 Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, font_info[0], font_info[1])
-                content.append(content_mapping.get(k.split('_')[1]))
+                position_info = content_mapping.get(k.split('_')[1])
+                if position_info not in content:
+                    content.append(position_info)
         content = "區域：{area}".format(area = content)
         result.write_text_on_image(content, (880, 240), 15, (255, 20, 20))
+        if data.get('Tempo_name') == '北港朝天宮 - 主殿' and image_data['wind_speed'] != 0:
+            Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, 'L3', 'W3')
     elif interface_combobox.get() == 'Interface 2':
-        content = list()
+        content = ['中上方', '正中間'] if data.get('Tempo_name') == '北港朝天宮 - 主殿' and image_data['wind_speed'] != 0 else list()
         icon_mapping = {
             "A": ("L4", "W2"), 
             "D": ("L5", "W2"),
@@ -74,14 +79,19 @@ def get_info(event):
                 alert_data.pop(i)
 
         for k, v in alert_data.items():
-            if float(v) > 11.5:
+            if float(v) < 11.5 or float(v) > 15:
                 font_info = icon_mapping.get(k.split('_')[1])
                 Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, font_info[0], font_info[1])
-                content.append(content_mapping.get(k.split('_')[1]))
+                position_info = content_mapping.get(k.split('_')[1])
+                if position_info not in content:
+                    content.append(position_info)
         content = "區域：{area}".format(area = content)
         result.write_text_on_image(content, (880, 240), 15, (255, 20, 20))
+        if data.get('Tempo_name') == '北港朝天宮 - 主殿' and image_data['wind_speed'] != 0:
+            Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, 'M4', 'W2')
+            Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, 'M5', 'W2')
     else:
-        content = list()
+        content = ['右上方'] if data.get('Tempo_name') == '北港朝天宮 - 主殿' and image_data['wind_speed'] != 0 else list()
         icon_mapping = {
             "A": ("L7", "W1"), 
             "D": ("L8", "W1"),
@@ -98,12 +108,16 @@ def get_info(event):
                 alert_data.pop(i)
 
         for k, v in alert_data.items():
-            if float(v) > 11.5:
+            if float(v) < 11.5 or float(v) > 15:
                 font_info = icon_mapping.get(k.split('_')[1])
                 Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, font_info[0], font_info[1])
-                content.append(content_mapping.get(k.split('_')[1]))
+                position_info = content_mapping.get(k.split('_')[1])
+                if position_info not in content:
+                    content.append(position_info)
         content = "區域：{area}".format(area = content)
         result.write_text_on_image(content, (880, 240), 15, (255, 20, 20))
+        if data.get('Tempo_name') == '北港朝天宮 - 主殿' and image_data['wind_speed'] != 0:
+            Create_Img.draw_watermark_on_the_base_img('output.png', warning_icon, 'R7', 'W1')
     # 設置預設圖片
     photo = tk.PhotoImage(file="output.png")
     imgLabel = tk.Label(root, image=photo)

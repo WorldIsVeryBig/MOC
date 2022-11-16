@@ -102,7 +102,7 @@ Z: 3315 ~ 4536 ]"""
         # 新增 RGB 格式底圖
         text_conf = Image.new('RGBA', image.size)
         # 設定字型、文字大小與文字透明度
-        font = ImageFont.truetype("Hiragino Sans GB.ttc", font_size, encoding='utf-8')
+        font = ImageFont.truetype("./NotoSansCJKtc-hinted/NotoSansCJKtc-DemiLight.otf", font_size, encoding='utf-8')
         # 用底圖新增 ImageDraw 物件
         draw = ImageDraw.Draw(text_conf)
         # 輸入文字
@@ -183,19 +183,19 @@ Z: 3315 ~ 4536 ]"""
         # 繪製現場監測畫面
         self.write_text_on_image(inside_of_frame, (340, 87), 23, black_font)
         # 繪製目標名稱
-        self.write_text_on_image(self.target, (75, 27), 23, black_font)
+        self.write_text_on_image(self.target, (75, 20), 23, black_font)
         # 繪製縣市名稱
-        self.write_text_on_image(self.country, (360, 25), 13, black_font)
+        self.write_text_on_image(self.country, (360, 20), 13, black_font)
         # 繪製聯絡人名稱
-        self.write_text_on_image(self.contact_person, (400, 43), 13, black_font)
+        self.write_text_on_image(self.contact_person, (400, 37), 13, black_font)
         # 繪製溫度
-        self.write_text_on_image(self.temp, (925, 60), 15, blue_font)
+        self.write_text_on_image(self.temp, (925, 54), 15, blue_font)
         # 繪製濕度
-        self.write_text_on_image(self.hum, (1045, 60), 15, blue_font)
+        self.write_text_on_image(self.hum, (1045, 54), 15, blue_font)
         # 繪製風速
-        self.write_text_on_image(self.wind_speed, (925, 100), 15, blue_font)
-        # 繪製平衡含水率
-        self.write_text_on_image(self.amc, (970, 137), 15, blue_font)
+        self.write_text_on_image(self.wind_speed, (925, 93), 15, blue_font)
+        # 繪製絕對濕度
+        self.write_text_on_image(self.amc, (960, 130), 15, blue_font)
         # 繪製警告標題
         self.write_text_on_image(self.warn_title, (880, 218), 15, red_font)
         # 繪製毀壞警告區域
