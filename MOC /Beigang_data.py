@@ -5,15 +5,11 @@ import math
 def csv_data():
     # 讀取csv資料
     df = pd.read_csv("./data/朝天宮三官殿Data/北港朝天宮三官殿神桌下Data.csv")
-    # 將變數time設成 list
-    time = list()
     # 將csv資料裡 LocalTime 欄位變成list
     time_data = df['資料時間'].tolist()
-    # 將 LocalTime 裡的資料傳入 Time 變數裡
-    time = [time_data[i]+" - "+time_data[i+1] for i in range(len(time_data)-1)]
     # 包成 data 回傳
     data = {
-        "Time": time
+        "Time": [time_data[i]+" - "+time_data[i+1] for i in range(len(time_data)-1)]
     }
     return data
 
