@@ -30,9 +30,8 @@ def get_info(event):
     image_data = result.get_info()
     # 繪製目標圖
     result.draw_result_img()
-
     alert_data = alert_point_data(tempo_name=data['Tempo_name'], time=time)
-    print({"alert_data": alert_data})
+
     # 繪製警告標誌
     if interface_combobox.get() == 'Interface 1':
         content = ['左下方'] if data.get('Tempo_name') == '北港朝天宮 - 主殿' and image_data['wind_speed'] != 0 else list()
@@ -158,7 +157,7 @@ tempo_name_combobox = ttk.Combobox(root, state='readonly')
 tempo_name_combobox.bind("<<ComboboxSelected>>", get_info)
 tempo_name_combobox['value'] = tempo_name_combobox_list
 tempo_name_combobox.place(x=24, y=20)
-tempo_name_combobox.current(0)
+tempo_name_combobox.current(2)
 
 # 繪製矩形框
 canvas.create_rectangle(22, 123, 1179, 567, width=3)

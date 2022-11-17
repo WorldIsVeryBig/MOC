@@ -6,13 +6,9 @@ import math
 
 
 init_root = './data/init_photo/'
-base_img = init_root + "base_img.png"
 warning_icon = init_root + "warning.png"
-trapezoid_frame = init_root + "trapezoid_frame.png"
-inside_of_frame = "現場監測畫面"
 black_font = (20, 20, 20)
 blue_font = (20, 20, 255)
-red_font = (255, 20, 20)
 
 
 class Create_Img():
@@ -22,41 +18,26 @@ class Create_Img():
         df2 = pd.read_csv("./Total_Data/2022 data 北港朝天宮.csv")
         self.interface = interface
         self.time = time
-        self.country = "雲林縣"  #
-        self.target = tempo_name  #
+        self.country = "雲林縣"
+        self.target = tempo_name
         self.contact_person = "陳泓嶧"
         self.temp = (str(df1.loc[df1['資料時間'] == time]['溫度(°C)']).split("   ")[1].split('\n')[0].strip())
-        self.hum = str(df1.loc[df1['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split('\n')[0]  #
-        self.wind_speed = str(df2.loc[df2['LocalTime'] == time]['WindSpeed']).split("   ")[1].split('\n')[0]  #
+        self.hum = str(df1.loc[df1['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split('\n')[0]
+        self.wind_speed = str(df2.loc[df2['LocalTime'] == time]['WindSpeed']).split("   ")[1].split('\n')[0]
         if self.temp == 'NaN':
             Pw_Pa = 'Nan'
         else:
             Tk = float(self.temp) + 273.15
             sida = 1 - (Tk / 647.096)
-            exp = (math.exp((647.096 * (-7.85951783 * sida + 1.84408259 * sida ** 1.5 - 11.7866497 * sida ** 3 + 22.6807411 * sida ** 3.5 - 
+            exp = (math.exp((647.096 * (-7.85951783 * sida + 1.84408259 * sida ** 1.5 - 11.7866497 * sida ** 3 + 22.6807411 * sida ** 3.5 -
                   15.9618719 * sida ** 4 + 1.80122502 * sida ** 7.5))/Tk))
             Pws_hPa = 220640 * exp
             Pw_Pa = (float(self.hum) / 100) * Pws_hPa * 100
             Ah = str(round(float(2.169 * Pw_Pa / Tk), 2))
-        self.amc = Ah  #
+        self.amc = Ah
         self.target_img = './data/Photo/' + tempo_name + '.jpg'
         self.output_img = "output.png"
         self.warn_title = "彩繪即將乾縮損毀"
-#         self.content = "區域: 左前上"
-#         self.warn_area = """毀損區塊座標:
-# [ N: 928.5 ~ 3796.1,
-#   E: -15454.1 ~ -11165.9,
-#   Z: 3315 ~ 4536 ]"""
-#         self.content = "區域: 左中上"
-#         self.warn_area = """毀損區塊座標:
-# [ N: 928.5 ~ 3796.1,
-# E: -5363 ~ -8135.7,
-# Z: 3315 ~ 4536 ]"""
-        self.content = "區域: 左後上"
-        self.warn_area = """毀損區塊座標:
-[ N: -5363.3 ~ -8135.7,
-E: -2593.9 ~ -6979.9,
-Z: 3315 ~ 4536 ]"""
 
     def get_info(self):
         result = {
@@ -69,36 +50,25 @@ Z: 3315 ~ 4536 ]"""
             "amc": self.amc,
             "target_img": self.target_img,
             "output_img": self.output_img,
-            "warn_message": self.warn_title,
-            "content": self.content,
-            "warn_area": self.warn_area
+            "warn_message": self.warn_title
         }
         return result
 
     def create_result_img(self):
-        # 取得傳入資料
-        data = self.get_info()
-        img_top = 85
-        img_left = 30
         # 讀取底圖
-        image = cv2.imread(base_img)
-        target = cv2.imread(data['target_img'])
+        image = cv2.imread(init_root + "base_img.png")
+        target = cv2.imread(self.target_img)
         # 調整target的形狀
         target = cv2.resize(target, (810, 330))
         target_l, target_w, target_h = target.shape
-        # 設定 target 在原圖上的座標
-        img_bottom = img_top + target_l
-        img_right = img_left + target_w
         # 用 target 覆蓋原圖
-        image[img_top:img_bottom, img_left:img_right] = target
+        image[85:85 + target_l, 30:30 + target_w] = target
         # 儲存圖片
-        cv2.imwrite(data['output_img'], image)
+        cv2.imwrite(self.output_img, image)
 
     def write_text_on_image(self, content, position, font_size, font_color):
-        # 取得傳入資料
-        data = self.get_info()
         # 開啟目標圖片
-        image = Image.open(data['output_img']).convert("RGBA")
+        image = Image.open(self.output_img).convert("RGBA")
         # 新增 RGB 格式底圖
         text_conf = Image.new('RGBA', image.size)
         # 設定字型、文字大小與文字透明度
@@ -110,7 +80,7 @@ Z: 3315 ~ 4536 ]"""
         # 結合底圖與文字
         text_combined = Image.alpha_composite(image, text_conf)
         # 儲存圖片結果
-        text_combined.save(data['output_img'])
+        text_combined.save(self.output_img)
 
     def draw_watermark_on_the_base_img(img_name, logo_name, position, logo_size):
         # 讀取原圖與 Logo
@@ -157,22 +127,19 @@ Z: 3315 ~ 4536 ]"""
             "R7": (230, 540),
             "R8": (265, 540),
             "R9": (300, 540)}
-        position = position_map.get(position)
+        mark_position = position_map.get(position)
 
         # 設定 Logo 在原圖上的座標
-        top_ = position[0]
-        left_ = position[1]
+        top_ = mark_position[0]
+        left_ = mark_position[1]
         bottom_ = top_ + h_logo
         right_ = left_ + w_logo
 
         # 劃定原圖與 Logo 相對應的座標
         destination = image[top_:bottom_, left_:right_]
 
-        # 轉成浮水印
-        result = cv2.addWeighted(destination, 1, logo, 1, 0)
-
         # 用 Logo 覆蓋原圖
-        image[top_:bottom_, left_:right_] = result
+        image[top_:bottom_, left_:right_] = cv2.addWeighted(destination, 1, logo, 1, 0)
 
         # 儲存圖片
         cv2.imwrite("output.png", image)
@@ -181,7 +148,7 @@ Z: 3315 ~ 4536 ]"""
         # 創建底圖
         self.create_result_img()
         # 繪製現場監測畫面
-        self.write_text_on_image(inside_of_frame, (340, 87), 23, black_font)
+        self.write_text_on_image("現場監測畫面", (340, 87), 23, black_font)
         # 繪製目標名稱
         self.write_text_on_image(self.target, (75, 20), 23, black_font)
         # 繪製縣市名稱
@@ -197,8 +164,4 @@ Z: 3315 ~ 4536 ]"""
         # 繪製絕對濕度
         self.write_text_on_image(self.amc, (960, 130), 15, blue_font)
         # 繪製警告標題
-        self.write_text_on_image(self.warn_title, (880, 218), 15, red_font)
-        # 繪製毀壞警告區域
-        # self.write_text_on_image(self.warn_area, (880, 240), 15, red_font)
-        # # 繪製內容
-        # self.write_text_on_image(self.content, (880, 320), 16, red_font)
+        self.write_text_on_image(self.warn_title, (880, 218), 15, (255, 20, 20))

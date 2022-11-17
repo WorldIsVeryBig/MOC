@@ -30,105 +30,97 @@ def AH_calc(temp, hum):
 def alert_point_data(tempo_name, time):
     match tempo_name:
         case '北港朝天宮 - 三川殿':
+            data = dict()
             df1 = pd.read_csv("./data/朝天宮三川殿Data/北港朝天宮三川殿中脊楹Data.csv")
             df2 = pd.read_csv("./data/朝天宮三川殿Data/北港朝天宮三川殿正門彎枋Data.csv")
             df3 = pd.read_csv("./data/朝天宮三川殿Data/北港朝天宮三川殿虎門大楣Data.csv")
             df4 = pd.read_csv("./data/朝天宮三川殿Data/北港朝天宮三川殿龍門大楣Data.csv")
+            location_data = [('interface2_B', df1), ('interface1_B', df2), ('interface2_A', df3), ('interface2_C', df4)]
 
-            data = {
-                "interface2_B": AH_calc(str(df1.loc[df1['資料時間'] == time]['溫度(°C)']).split("   ")[1].split("\n")[0].strip(), 
-                                        str(df1.loc[df1['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split("\n")[0].strip()), #interface 2 中上
-                "interface1_B": AH_calc(str(df2.loc[df2['資料時間'] == time]['溫度(°C)']).split("   ")[1].split("\n")[0].strip(), 
-                                        str(df2.loc[df2['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split("\n")[0].strip()), #interface 1 中上
-                "interface2_A": AH_calc(str(df3.loc[df3['資料時間'] == time]['溫度(°C)']).split("   ")[1].split("\n")[0].strip(), 
-                                        str(df3.loc[df3['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split("\n")[0].strip()), #interface 2 左上
-                "interface2_C": AH_calc(str(df4.loc[df4['資料時間'] == time]['溫度(°C)']).split("   ")[1].split("\n")[0].strip(), 
-                                        str(df4.loc[df4['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split("\n")[0].strip())  #interface 2 右上
-            }
+            for i in range(len(location_data)):
+                value = location_data[i][1]
+                data.update({
+                    location_data[i][0]: AH_calc(str(value.loc[value['資料時間'] == time]['溫度(°C)']).split("   ")[1].split("\n")[0].strip(), 
+                                                str(value.loc[value['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split("\n")[0].strip())
+                })
             return data
         case '北港朝天宮 - 觀音殿':
+            data = dict()
             df1 = pd.read_csv("./data/朝天宮觀音殿Data/北港朝天宮觀音殿虎邊大通Data.csv")
             df2 = pd.read_csv("./data/朝天宮觀音殿Data/北港朝天宮觀音殿神桌下Data.csv")
             df3 = pd.read_csv("./data/朝天宮觀音殿Data/北港朝天宮觀音殿龍邊中脊楹Data.csv")
+            location_data = [('interface2_A', df1), ('interface3_H', df2), ('interface2_C', df3)]
 
-            data = {
-                "interface2_A": AH_calc(str(df1.loc[df1['資料時間'] == time]['溫度(°C)']).split("   ")[1].split("\n")[0].strip(), 
-                                        str(df1.loc[df1['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split("\n")[0].strip()), #interface 2 左上
-                "interface3_H": AH_calc(str(df2.loc[df2['資料時間'] == time]['溫度(°C)']).split("   ")[1].split("\n")[0].strip(), 
-                                        str(df2.loc[df2['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split("\n")[0].strip()), #interface 3 中下
-                "interface2_C": AH_calc(str(df3.loc[df3['資料時間'] == time]['溫度(°C)']).split("   ")[1].split("\n")[0].strip(), 
-                                        str(df3.loc[df3['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split("\n")[0].strip())  #interface 2 右上
-            }
+            for i in range(len(location_data)):
+                value = location_data[i][1]
+                data.update({
+                    location_data[i][0]: AH_calc(str(value.loc[value['資料時間'] == time]['溫度(°C)']).split("   ")[1].split("\n")[0].strip(), 
+                                                str(value.loc[value['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split("\n")[0].strip())
+                })
             return data
         case '北港朝天宮 - 主殿':
+            data = dict()
             df1 = pd.read_csv("./data/朝天宮正殿Data/北港朝天宮正殿前神桌下Data.csv")
             df2 = pd.read_csv("./data/朝天宮正殿Data/北港朝天宮正殿壽樑Data.csv")
             df3 = pd.read_csv("./data/朝天宮正殿Data/北港朝天宮正殿藻井圓坯Data.csv")
             df4 = pd.read_csv("./data/朝天宮正殿Data/北港朝天宮正殿藻井Data.csv")
+            location_data = [('interface3_H', df1), ('interface1_B', df2), ('interface2_B', df3), ('interface2_H', df4)]
 
-            data = {
-                "interface3_H": AH_calc(str(df1.loc[df1['資料時間'] == time]['溫度(°C)']).split("   ")[1].split("\n")[0].strip(), 
-                                        str(df1.loc[df1['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split("\n")[0].strip()), #interface 3 中下
-                "interface1_B": AH_calc(str(df2.loc[df2['資料時間'] == time]['溫度(°C)']).split("   ")[1].split("\n")[0].strip(), 
-                                        str(df2.loc[df2['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split("\n")[0].strip()), #interface 1 中上
-                "interface2_B": AH_calc(str(df3.loc[df3['資料時間'] == time]['溫度(°C)']).split("   ")[1].split("\n")[0].strip(), 
-                                        str(df3.loc[df3['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split("\n")[0].strip()), #interface 2 中上
-                "interface2_H": AH_calc(str(df4.loc[df4['資料時間'] == time]['溫度(°C)']).split("   ")[1].split("\n")[0].strip(), 
-                                        str(df4.loc[df4['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split("\n")[0].strip())  #interface 2 中下
-            }
+            for i in range(len(location_data)):
+                value = location_data[i][1]
+                data.update({
+                    location_data[i][0]: AH_calc(str(value.loc[value['資料時間'] == time]['溫度(°C)']).split("   ")[1].split("\n")[0].strip(), 
+                                                str(value.loc[value['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split("\n")[0].strip())
+                })
             return data
         case '北港朝天宮 - 三官殿':
+            data = dict()
             df1 = pd.read_csv("./data/朝天宮三官殿Data/北港朝天宮三官殿虎邊大通Data.csv")
             df2 = pd.read_csv("./data/朝天宮三官殿Data/北港朝天宮三官殿神桌下Data.csv")
             df3 = pd.read_csv("./data/朝天宮三官殿Data/北港朝天宮三官殿龍邊中脊楹Data.csv")
+            location_data = [('interface2_A', df1), ('interface3_H', df2), ('interface2_F', df3)]
 
-            data = {
-                "interface2_A": AH_calc(str(df1.loc[df1['資料時間'] == time]['溫度(°C)']).split("   ")[1].split("\n")[0].strip(), 
-                                        str(df1.loc[df1['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split("\n")[0].strip()), #interface 2 左上 
-                "interface3_H": AH_calc(str(df2.loc[df2['資料時間'] == time]['溫度(°C)']).split("   ")[1].split("\n")[0].strip(), 
-                                        str(df2.loc[df2['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split("\n")[0].strip()), #interface 3 中下
-                "interface2_F": AH_calc(str(df3.loc[df3['資料時間'] == time]['溫度(°C)']).split("   ")[1].split("\n")[0].strip(), 
-                                        str(df3.loc[df3['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split("\n")[0].strip())  #interface 2 右中
-            }
+            for i in range(len(location_data)):
+                value = location_data[i][1]
+                data.update({
+                    location_data[i][0]: AH_calc(str(value.loc[value['資料時間'] == time]['溫度(°C)']).split("   ")[1].split("\n")[0].strip(), 
+                                                str(value.loc[value['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split("\n")[0].strip())
+                })
             return data
         case '北港朝天宮 - 文昌殿':
+            data = dict()
             df1 = pd.read_csv("./data/朝天宮文昌殿Data/北港朝天宮文昌殿虎邊中脊楹Data.csv")
             df2 = pd.read_csv("./data/朝天宮文昌殿Data/北港朝天宮文昌殿神桌下Data.csv")
             df3 = pd.read_csv("./data/朝天宮文昌殿Data/北港朝天宮文昌殿龍邊大通Data.csv")
+            location_data = [('interface2_D', df1), ('interface3_H', df2), ('interface2_C', df3)]
 
-            data = {
-                "interface2_D": AH_calc(str(df1.loc[df1['資料時間'] == time]['溫度(°C)']).split("   ")[1].split("\n")[0].strip(), 
-                                        str(df1.loc[df1['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split("\n")[0].strip()), #interface 2 左中
-                "interface3_H": AH_calc(str(df2.loc[df2['資料時間'] == time]['溫度(°C)']).split("   ")[1].split("\n")[0].strip(), 
-                                        str(df2.loc[df2['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split("\n")[0].strip()), #interface 3 中下
-                "interface2_C": AH_calc(str(df3.loc[df3['資料時間'] == time]['溫度(°C)']).split("   ")[1].split("\n")[0].strip(), 
-                                        str(df3.loc[df3['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split("\n")[0].strip())  #interface 2 右上
-            }
+            for i in range(len(location_data)):
+                value = location_data[i][1]
+                data.update({
+                    location_data[i][0]: AH_calc(str(value.loc[value['資料時間'] == time]['溫度(°C)']).split("   ")[1].split("\n")[0].strip(), 
+                                                str(value.loc[value['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split("\n")[0].strip())
+                })
             return data
         case '鹿港龍山寺 - 正殿':
+            data = dict()
             df1 = pd.read_csv("./data/龍山寺正殿Data/鹿港龍山寺正殿中脊楹Data.csv")
             df2 = pd.read_csv("./data/龍山寺正殿Data/鹿港龍山寺正殿虎邊大通Data.csv")
             df3 = pd.read_csv("./data/龍山寺正殿Data/鹿港龍山寺正殿後虎門員光Data.csv")
             df4 = pd.read_csv("./data/龍山寺正殿Data/鹿港龍山寺正殿後龍門員光Data.csv")
             df5 = pd.read_csv("./data/龍山寺正殿Data/鹿港龍山寺正殿龍邊大通Data.csv")
             df6 = pd.read_csv("./data/龍山寺正殿Data/鹿港龍山寺正殿觀音前神桌下Data.csv")
+            location_data = [('interface2_B', df1), ('interface2_A', df2), ('interface3_A', df3), 
+                            ('interface3_C', df4), ('interface2_C', df5), ('interface3_H', df6)]
 
-            data = {
-                "interface2_B": AH_calc(str(df1.loc[df1['資料時間'] == time]['溫度(°C)']).split("   ")[1].split("\n")[0].strip(), 
-                                        str(df1.loc[df1['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split("\n")[0].strip()), #interface 2 左中
-                "interface2_A": AH_calc(str(df2.loc[df2['資料時間'] == time]['溫度(°C)']).split("   ")[1].split("\n")[0].strip(), 
-                                        str(df2.loc[df2['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split("\n")[0].strip()), #interface 2 左上
-                "interface3_A": AH_calc(str(df3.loc[df3['資料時間'] == time]['溫度(°C)']).split("   ")[1].split("\n")[0].strip(), 
-                                        str(df3.loc[df3['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split("\n")[0].strip()),  #interface 3 左上
-                "interface3_C": AH_calc(str(df4.loc[df4['資料時間'] == time]['溫度(°C)']).split("   ")[1].split("\n")[0].strip(), 
-                                        str(df4.loc[df4['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split("\n")[0].strip()), #interface 3 右上
-                "interface2_C": AH_calc(str(df5.loc[df5['資料時間'] == time]['溫度(°C)']).split("   ")[1].split("\n")[0].strip(), 
-                                        str(df5.loc[df5['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split("\n")[0].strip()), #interface 2 右上
-                "interface3_H": AH_calc(str(df6.loc[df6['資料時間'] == time]['溫度(°C)']).split("   ")[1].split("\n")[0].strip(), 
-                                        str(df6.loc[df6['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split("\n")[0].strip())  #interface 3 中下
-            }
+            for i in range(len(location_data)):
+                value = location_data[i][1]
+                data.update({
+                    location_data[i][0]: AH_calc(str(value.loc[value['資料時間'] == time]['溫度(°C)']).split("   ")[1].split("\n")[0].strip(), 
+                                                str(value.loc[value['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split("\n")[0].strip())
+                })
             return data
         case '鹿港龍山寺 - 後殿':
+            data = dict()
             df1 = pd.read_csv("./data/龍山寺後殿Data/鹿港龍山寺後殿外虎邊卷棚彎枋Data.csv")
             df2 = pd.read_csv("./data/龍山寺後殿Data/鹿港龍山寺後殿外虎邊壽樑Data.csv")
             df3 = pd.read_csv("./data/龍山寺後殿Data/鹿港龍山寺後殿虎邊中脊楹Data.csv")
@@ -136,18 +128,12 @@ def alert_point_data(tempo_name, time):
             df5 = pd.read_csv("./data/龍山寺後殿Data/鹿港龍山寺後殿阿彌陀佛神桌下Data.csv")
             df6 = pd.read_csv("./data/龍山寺後殿Data/鹿港龍山寺後殿龍邊束木Data.csv")
 
-            data = {
-                "interface1_A": AH_calc(str(df1.loc[df1['資料時間'] == time]['溫度(°C)']).split("   ")[1].split("\n")[0].strip(), 
-                                        str(df1.loc[df1['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split("\n")[0].strip()), #interface 1 左上
-                "interface1_B": AH_calc(str(df2.loc[df2['資料時間'] == time]['溫度(°C)']).split("   ")[1].split("\n")[0].strip(), 
-                                        str(df2.loc[df2['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split("\n")[0].strip()), #interface 1 中上
-                "interface2_A": AH_calc(str(df3.loc[df3['資料時間'] == time]['溫度(°C)']).split("   ")[1].split("\n")[0].strip(), 
-                                        str(df3.loc[df3['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split("\n")[0].strip()),  #interface 2 左上
-                "interface3_C": AH_calc(str(df4.loc[df4['資料時間'] == time]['溫度(°C)']).split("   ")[1].split("\n")[0].strip(), 
-                                        str(df4.loc[df4['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split("\n")[0].strip()), #interface 3 左上
-                "interface3_H": AH_calc(str(df5.loc[df5['資料時間'] == time]['溫度(°C)']).split("   ")[1].split("\n")[0].strip(), 
-                                        str(df5.loc[df5['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split("\n")[0].strip()), #interface 3 中下
-                "interface3_C": AH_calc(str(df6.loc[df6['資料時間'] == time]['溫度(°C)']).split("   ")[1].split("\n")[0].strip(), 
-                                        str(df6.loc[df6['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split("\n")[0].strip())  #interface 3 右上
-            }
+            location_data = [('interface2_B', df1), ('interface2_A', df2), ('interface3_A', df3), 
+                            ('interface3_C', df4), ('interface2_C', df5), ('interface3_H', df6)]
+            for i in range(len(location_data)):
+                value = location_data[i][1]
+                data.update({
+                    location_data[i][0]: AH_calc(str(value.loc[value['資料時間'] == time]['溫度(°C)']).split("   ")[1].split("\n")[0].strip(), 
+                                                str(value.loc[value['資料時間'] == time]['相對濕度(%)']).split("   ")[1].split("\n")[0].strip())
+                })
             return data
