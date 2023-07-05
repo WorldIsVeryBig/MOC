@@ -5,7 +5,8 @@ import pandas as pd
 import math
 
 
-init_root = './data/init_photo/'
+init_root = './文化部資料/data/init_photo/'
+root_path = "./文化部資料/data/"
 warning_icon = init_root + "warning.png"
 black_font = (20, 20, 20)
 blue_font = (20, 20, 255)
@@ -14,8 +15,8 @@ blue_font = (20, 20, 255)
 class Create_Img():
 
     def __init__(self, time, interface, tempo_name):
-        df1 = pd.read_csv("./data/朝天宮正殿Data/北港朝天宮正殿壽樑Data.csv")
-        df2 = pd.read_csv("./Total_Data/2022 data 北港朝天宮.csv")
+        df1 = pd.read_csv(f"{root_path}朝天宮正殿Data/北港朝天宮正殿壽樑Data.csv")
+        df2 = pd.read_csv("./文化部資料/Total_Data/2022 data 北港朝天宮.csv")
         self.interface = interface
         self.time = time
         self.country = "雲林縣"
@@ -35,7 +36,7 @@ class Create_Img():
             Pw_Pa = (float(self.hum) / 100) * Pws_hPa * 100
             Ah = str(round(float(2.169 * Pw_Pa / Tk), 2))
         self.amc = Ah
-        self.target_img = './data/Photo/' + tempo_name + '.jpg'
+        self.target_img = f'{root_path}Photo/' + tempo_name + '.jpg'
         self.output_img = "output.png"
         self.warn_title = "彩繪即將乾縮損毀"
 
